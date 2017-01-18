@@ -85,7 +85,7 @@ function calcularDistancia(result) {
 
 function nuevaDireccion() {
 // Copiar el frame
-  $('#panel-principal').clone().appendTo('#nuevosElementos');
+  $('#panel-A').clone().appendTo('#nuevosElementos').attr('id', 'panel-' + labels[cantDirecciones]);;
   // Cambia el label
   $('#nuevosElementos .panel-heading h3').last().text(labels[cantDirecciones]);
   // vacia el input y cambia el id
@@ -93,14 +93,18 @@ function nuevaDireccion() {
   $('#nuevosElementos #referencias-A').last().val("").attr('id', 'referencias-' + labels[cantDirecciones]);
   $('#nuevosElementos #instrucciones-A').last().val("").attr('id', 'instrucciones-' + labels[cantDirecciones]);
   $('#nuevosElementos #boton-gps-A').last().attr('id', 'boton-gps-'+ labels[cantDirecciones]);
+  //$('#nuevosElementos #panel-A').last().attr('id', 'panel-' + labels[cantDirecciones]);
   //muestra la flechita x
   $('.panel-body #close-A').removeClass('hidden');
   $('.panel-body #close-B').removeClass('hidden');
   $('#nuevosElementos .panel-body #close-A').attr('id', 'close-' + labels[cantDirecciones]).removeClass('hidden');
   $('#nuevosElementos .panel-body #close-' + labels[cantDirecciones]).attr("onclick", "eliminarDireccion('" + labels[cantDirecciones] + "')");
   // cambia los parametros onkeypress
-  $('#nuevosElementos .panel-body #ubicacion-' + labels[cantDirecciones]).attr("onkeypress", "buscarUbicacion(event, '"+ labels[cantDirecciones] +"')");
+  $('#nuevosElementos .panel-body #ubicacion-' + labels[cantDirecciones]).attr({"onkeypress": "buscarUbicacion(event, '"+ labels[cantDirecciones] +"')", "onclick": "verificarError('"+ labels[cantDirecciones] +"')"});
+  $('#nuevosElementos .panel-body #referencias-' + labels[cantDirecciones]).attr("onclick", "verificarError('"+ labels[cantDirecciones] +"')");
+  $('#nuevosElementos .panel-body #instrucciones-' + labels[cantDirecciones]).attr("onclick", "verificarError('"+ labels[cantDirecciones] +"')");
   $('#nuevosElementos .panel-body #boton-gps-' + labels[cantDirecciones]).attr("onclick", "myGeolocation('"+ labels[cantDirecciones] +"')");
+  //Cambiar lo onclick
   inicializarPrediccion(labels[cantDirecciones]);
   cantDirecciones++;
 }
@@ -229,7 +233,7 @@ function eliminarMarcador(name) {
 
 function eliminarDireccion(name) {
 	if (cantDirecciones > 2) {
-		$('#nuevosElementos #panel-principal').last().remove();
+		$('#nuevosElementos #panel-' + labels[cantDirecciones - 1]).remove();
 		if (null != existeMarcador(name)) {
 			eliminarMarcador(name);
 		}
@@ -253,31 +257,46 @@ function programarServicio() {
 }
 
 function confirmarServicio() {
-	var confirmar = true;
-	if (cantDirecciones == marcadores.length) {
-		for (var s = 0; s < marcadores.length; s++) {
-			var d = document.getElementById("ubicacion-" + labels[s]).value.trim();
-			var r = document.getElementById("referencias-" + labels[s]).value.trim();
-			var ins = document.getElementById("instrucciones-" + labels[s]).value.trim();
-			if (d == "" || r == "" || ins == "") {
-				confirmar = false;
-				break;
-			}
+  var confirmar = true;
+  var result = "";
+  if (cantDirecciones != marcadores.length) {
+    result = '<div class="alert alert-dismissible alert-danger">'
+    result += '<button type="button" class="close" data-dismiss="alert">&times;</button>'
+    result += '<strong>ERROR: </strong>Es importante que esten los marcadores en el mapa.'
+    result += '</div>'
+    __('_error_marcadores_').innerHTML = result;
+  }
+	for (var i = 0; i < cantDirecciones; i++) {
+		var u = document.getElementById("ubicacion-" + labels[i]).value.trim();
+		var r = document.getElementById("referencias-" + labels[i]).value.trim();
+		var ins = document.getElementById("instrucciones-" + labels[i]).value.trim();
+		if (u == "" || r == "" || ins == "") {
+      confirmar = false;
+      marcarError(labels[i]);
 		}
-		if (confirmar) {
-			window.alert("Todos los datos son correctos");
-		} else {
-      result = '<div class="alert alert-dismissible alert-danger">'
-      result += '<button type="button" class="close" data-dismiss="alert">&times;</button>'
-      result += '<strong>ERROR: </strong>Todos los campos deben estar llenos.'
-      result += '</div>'
-      __('_mensaje_').innerHTML = result;
-    }
-	} else {
-      result = '<div class="alert alert-dismissible alert-danger">'
-      result += '<button type="button" class="close" data-dismiss="alert">&times;</button>'
-      result += '<strong>ERROR: </strong>Faltan marcadores en el mapa.'
-      result += '</div>'
-      __('_mensaje_').innerHTML = result;
 	}
+	if (confirmar) {
+      __('_error_campos_').innerHTML = "";
+      __('_error_marcadores_').innerHTML = "";
+      __('_titulo_confirmar_').innerHTML = "Confirmar Servicio";
+	} else {
+    result = '<div class="alert alert-dismissible alert-danger">'
+    result += '<button type="button" class="close" data-dismiss="alert">&times;</button>'
+    result += '<strong>ERROR: </strong>Todos los campos deben estar llenos.'
+    result += '</div>'
+    __('_error_campos_').innerHTML = result;
+    __('_titulo_confirmar_').innerHTML = "Verifica algunos detalles";
+  }
+}
+
+function marcarError(label) {
+  $('#panel-' + label).addClass('panel-error');
+  $('#panel-' + label + ' .panel-heading').addClass('heading-error');
+}
+
+function verificarError(name) {
+  if ($('#panel-' + name).hasClass('panel-error')) {
+    $('#panel-' + name).removeClass('panel-error');
+    $('#panel-' + name + ' .panel-heading').removeClass('heading-error');
+  }
 }

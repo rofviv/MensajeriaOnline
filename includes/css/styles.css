@@ -89,6 +89,12 @@ hr {
 .panel-horizontal {
   border: 1px solid #02918C;
 }
+.panel-error {
+  border: 1px solid red;
+}
+.heading-error {
+  background-color: #ff0000 !important;
+}
 .panel-horizontal .panel-heading {
   background-color: #02918C;
 }

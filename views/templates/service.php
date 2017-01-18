@@ -33,7 +33,7 @@
                   </div>
   							</div>
   						</div>
-              <div class="panel panel-default panel-horizontal" id="panel-principal">
+              <div class="panel panel-default panel-horizontal" id="panel-A">
                 <div class="panel-heading">
 						        <h3 class="panel-title">A</h3>
 						    </div>
@@ -43,7 +43,7 @@
 										<div class="col-md-12 text-center">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i></span>
-												<input id="ubicacion-A" class="form-control" type="text" placeholder="Ubicacion GPS" onkeypress="buscarUbicacion(event, 'A')">
+												<input id="ubicacion-A" class="form-control" type="text" placeholder="Ubicacion GPS" onkeypress="buscarUbicacion(event, 'A')" onclick="verificarError('A')">
 												<span class="input-group-btn">
 													<button id="boton-gps-A" class="btn btn-secondary btn-default" title="Detectar mi ubicación" type="button" onclick="myGeolocation('A')">
                             <i class="fa fa-crosshairs fa-lg" aria-hidden="true"></i>
@@ -56,7 +56,7 @@
 										<div class="col-md-12 text-center">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-pencil fa-md" aria-hidden="true"></i></span>
-												<input id="referencias-A" class="form-control" type="text" placeholder="Direccion Escrita">
+												<input id="referencias-A" class="form-control" type="text" placeholder="Direccion Escrita" onclick="verificarError('A')">
 											</div>
 										</div>
 									</div>
@@ -64,13 +64,13 @@
 										<div class="col-md-12">
 											<div class="input-group">
 			    								<span class="input-group-addon"><i class="fa fa-info fa-lg" aria-hidden="true"></i></span>
-												<textarea id="instrucciones-A" class="form-control" style="resize: none; width: 100%;" placeholder="Que hacer al llegar aqui"></textarea>
+												<textarea id="instrucciones-A" class="form-control" style="resize: none; width: 100%;" placeholder="Que hacer al llegar aqui" onclick="verificarError('A')"></textarea>
 			    							</div>
 										</div>
 									</div>
                 </div>
               </div>
-              <div class="panel panel-default panel-horizontal">
+              <div class="panel panel-default panel-horizontal" id="panel-B">
                 <div class="panel-heading">
 						        <h3 class="panel-title">B</h3>
 						    </div>
@@ -80,7 +80,7 @@
 										<div class="col-md-12 text-center">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i></span>
-												<input id="ubicacion-B" class="form-control" type="text" placeholder="Ubicacion GPS" onkeypress="buscarUbicacion(event, 'B')">
+												<input id="ubicacion-B" class="form-control" type="text" placeholder="Ubicacion GPS" onkeypress="buscarUbicacion(event, 'B')" onclick="verificarError('B')">
 												<span class="input-group-btn">
 													<button class="btn btn-secondary btn-default" title="Detectar mi ubicación" type="button" onclick="myGeolocation('B')">
 													  <i class="fa fa-crosshairs fa-lg" aria-hidden="true"></i>
@@ -93,7 +93,7 @@
 										<div class="col-md-12 text-center">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-pencil fa-md" aria-hidden="true"></i></span>
-												<input id="referencias-B" class="form-control" type="text" placeholder="Direccion Escrita">
+												<input id="referencias-B" class="form-control" type="text" placeholder="Direccion Escrita" onclick="verificarError('B')">
 											</div>
 										</div>
 									</div>
@@ -101,7 +101,7 @@
 										<div class="col-md-12">
 											<div class="input-group">
 			    								<span class="input-group-addon"><i class="fa fa-info fa-lg" aria-hidden="true"></i></span>
-												<textarea id="instrucciones-B" class="form-control" style="resize: none; width: 100%;" placeholder="Que hacer al llegar aqui"></textarea>
+												<textarea id="instrucciones-B" class="form-control" style="resize: none; width: 100%;" placeholder="Que hacer al llegar aqui" onclick="verificarError('B')"></textarea>
 			    							</div>
 										</div>
 									</div>
