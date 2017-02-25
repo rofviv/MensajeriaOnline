@@ -15,7 +15,7 @@
               <div class="form-group">
   							<div class="date-service">
                   <button class="btn btn-default btn-md" id="btn-programarS" type="button" onclick="programarServicio()"><i class="fa fa-calendar fa-lg" aria-hidden="true"></i> Programar Servicio <i class="fa fa-caret-down" aria-hidden="true"></i></button>
-                  <div class="hidden" id="fecha-hora" style="padding-top:10px;">
+                  <div class="hidden" id="fecha-hora" style="padding-top:10px; padding-bottom:10px">
                     <div class="row">
                       <div class="col-md-6">
                         <div class="input-group">
@@ -43,7 +43,7 @@
 										<div class="col-md-12 text-center">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i></span>
-												<input id="ubicacion-A" class="form-control" type="text" placeholder="Ubicacion GPS" onkeypress="buscarUbicacion(event, 'A')" onclick="verificarError('A')">
+												<input id="ubicacion-A" class="form-control" type="text" placeholder="Ubicacion GPS" onclick="verificarError('A')">
 												<span class="input-group-btn">
 													<button id="boton-gps-A" class="btn btn-secondary btn-default" title="Detectar mi ubicación" type="button" onclick="myGeolocation('A')">
                             <i class="fa fa-crosshairs fa-lg" aria-hidden="true"></i>
@@ -80,7 +80,7 @@
 										<div class="col-md-12 text-center">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i></span>
-												<input id="ubicacion-B" class="form-control" type="text" placeholder="Ubicacion GPS" onkeypress="buscarUbicacion(event, 'B')" onclick="verificarError('B')">
+												<input id="ubicacion-B" class="form-control" type="text" placeholder="Ubicacion GPS" onclick="verificarError('B')">
 												<span class="input-group-btn">
 													<button class="btn btn-secondary btn-default" title="Detectar mi ubicación" type="button" onclick="myGeolocation('B')">
 													  <i class="fa fa-crosshairs fa-lg" aria-hidden="true"></i>
@@ -108,19 +108,29 @@
                 </div>
               </div>
               <div id="nuevosElementos"></div>
-              <div class="text-right" style="padding-bottom:10px;">
-                <button class="btn btn-default btn-md" type="button" onclick="nuevaDireccion()"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Añadir dirección</button>
+              <div class="" style="padding-bottom:10px;">
+                <div class="row">
+                  <div class="col-md-6 text-left">
+                    <button class="btn btn-default btn-md" type="button" onclick="nuevaDireccion()"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Añadir dirección</button>
+                  </div>
+                  <div class="col-md-4 text-right">
+                    <label>Ida y Vuelta</label>
+                  </div>
+                  <div class="col-md-2 text-right">
+                    <input id="checkIdaVuelta" data-toggle="toggle" type="checkbox" data-on="Si" data-off="No" data-size="small">
+                  </div>
+                </div>
               </div>
             </div>
             <div class="panel-footer" style="padding-bottom: 0px; margin.bottom:0px;">
               <table class="table table-condensed" style="padding-bottom: 0px; margin.bottom:0px; ">
   							<tr>
   								<td>Distancia</td>
-  								<td id="distancia">0 Km</td>
+  								<td id="distancia">Km. 0</td>
   							</tr>
   							<tr>
   								<td>Valor a pagar</td>
-  								<td>Bs. 0</td>
+  								<td id="precioPagar">Bs. 0</td>
   							</tr>
   							<tr>
   								<td colspan="2">
@@ -143,7 +153,12 @@
   <?php include(TEMPLATE_DIR . 'complement/footer.php'); ?>
   <?php include(TEMPLATE_DIR . 'public/serviceConfirm.html'); ?>
 
+  <script type="text/javascript" src="includes/js/precios.js"></script>
   <script type="text/javascript" src="includes/js/maps.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBku1G8U3PY79XNSB_WMxMFC-_g1CPwvXc&libraries=places&callback=iniciarMapa" async defer></script>
+  <script type="text/javascript" src="includes/libs/datepicker/js/bootstrap-datepicker.min.js"></script>
+  <script type="text/javascript" src="includes/libs/datepicker/locales/bootstrap-datepicker.es.min.js"></script>
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+  <script type="text/javascript" src="includes/js/calendar.js"></script>
 </body>
 </html>

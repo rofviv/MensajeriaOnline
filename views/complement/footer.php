@@ -25,7 +25,5 @@
   </div>
 </footer>
 
-
 <script type="text/javascript" src="includes/libs/bootstrap/js/jquery.js"></script>
 <script type="text/javascript" src="includes/libs/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="includes/js/slide.js"></script>

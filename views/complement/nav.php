@@ -28,14 +28,13 @@
 						<li class="dropdown drop-active">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
 								<span class="glyphicon glyphicon-user"></span> <?php echo $users[$_SESSION['app_id']]['nombre']; ?> <i class="fa fa-caret-down" aria-hidden="true"></i>
-								<ul class="dropdown-menu">
-									<li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i> Mi Cuenta</a></li>
-									<li class="divider"></li>
-									<li><a href="?view=logout"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
-								</ul>
 							</a>
+							<ul class="dropdown-menu menu-user">
+								<li><a href="?view=profile"><i class="fa fa-cog" aria-hidden="true"></i> Mi Cuenta</a></li>
+								<li class="divider"></li>
+								<li><a href="?view=logout"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+							</ul>
 						</li>
-
 					<?php } ?>
 				</ul>
 			</div>

@@ -29,7 +29,7 @@
       </p>
     <?php } else { ?>
       <p class="navbar-text pull-right">
-        <i class="fa fa-user-circle-o" aria-hidden="true"></i> Conectado como <a href="#" class="navbar-link"><?php echo $users[$_SESSION['app_id']]['nombre'] . ' ' . $users[$_SESSION['app_id']]['apellido'] ?></a>
+        <i class="fa fa-user-circle-o" aria-hidden="true"></i> Conectado como <a href="?view=profile" class="navbar-link"><?php echo $users[$_SESSION['app_id']]['nombre'] . ' ' . $users[$_SESSION['app_id']]['apellido'] ?></a>
       </p>
     <?php } ?>
   </div>

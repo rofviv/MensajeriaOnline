@@ -3,8 +3,12 @@ var marcadores = [];
 var labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 var cantDirecciones = 2;
 var servicioProgramado = false;
+var distanciaKM = 0;
+var infowindow;
+var idaVuelta = false;
 function iniciarMapa() {
   var divMapa = document.getElementById('mapa');
+  infowindow = new google.maps.InfoWindow();
   gMap = new google.maps.Map(divMapa, {
     center: {lat: -17.783359, lng: -63.182122},
     zoom: 15,
@@ -28,36 +32,44 @@ function iniciarMapa() {
   	adicionarMarcador(e.latLng, labels[marcadores.length]);
   	actualizarParadas();
 	});
+}
 
+$(function() {
+  $('#checkIdaVuelta').change(function() {
+    if ($(this).prop('checked')) {
+      if (marcadores.length >= 2) {
+        dibujarVuelta();
+      }
+    }
+  })
+});
+
+function dibujarVuelta() {
+  dibujarRuta();
 }
 
 function inicializarPrediccion(name) {
-  var buscador = document.getElementById("ubicacion-" + name);
+  var buscador = __("ubicacion-" + name);
   var options = {
     componentRestrictions: {country: "bo"}
   };
   var autocomplete = new google.maps.places.Autocomplete(buscador, options);
-  var e = {
-  	keyCode: 13
-  }
   autocomplete.addListener('place_changed', function() {
-  	buscarUbicacion(e, name);
+  	buscarUbicacion(name);
   });
 }
 
-function buscarUbicacion(e, name) {
-	if (e.keyCode == 13) {
-		var text = document.getElementById('ubicacion-' + name).value;
-		var gCoder = new google.maps.Geocoder();
-		var objInformacion = {
-			address: text + ", Santa Cruz de la Sierra, Bolivia"
-		}
-		gCoder.geocode(objInformacion, function (datos, status) {
-			var coordenadas = datos[0].geometry.location;
-			adicionarMarcador(coordenadas, name);
-			actualizarParadas();
-	  });
-	}
+function buscarUbicacion(name) {
+	var text = __('ubicacion-' + name).value;
+	var gCoder = new google.maps.Geocoder();
+	var objInformacion = {
+		address: text + ", Santa Cruz de la Sierra, Bolivia"
+  }
+  gCoder.geocode(objInformacion, function (datos, status) {
+    var coordenadas = datos[0].geometry.location;
+    adicionarMarcador(coordenadas, name);
+    actualizarParadas();
+  });
 }
 
 function myGeolocation(etiqueta) {
@@ -67,20 +79,22 @@ function myGeolocation(etiqueta) {
 		var lon = pos.coords.longitude;
 		var gLatLon = new google.maps.LatLng(lat, lon);
 		adicionarMarcador(gLatLon, etiqueta);
-		if (marcadores.length > 1) {
-			actualizarParadas();
-		}
+		actualizarParadas();
 	}
 }
 
 function calcularDistancia(result) {
-  var total = 0;
+  var distanciaIdaVuelta = 0;
   var myroute = result.routes[0];
   for (var i = 0; i < myroute.legs.length; i++) {
-    total += myroute.legs[i].distance.value;
+    distanciaKM += myroute.legs[i].distance.value;
   }
-  total = total / 1000;
-  document.getElementById('distancia').innerHTML = total + ' Km';
+  distanciaKM = distanciaKM / 1000;
+
+  __('distancia').innerHTML = 'Km. ' + Math.floor(distanciaKM);
+  __('precioPagar').innerHTML = 'Bs. ' + calcularPrecio(Math.floor(distanciaKM), marcadores.length, 0);
+  distanciaIdaVuelta = myroute.legs[myroute.legs.length - 1].distance.value;
+  console.log("DISTANCIA ENTR PUNTO A Y FINAL " + distanciaIdaVuelta);
 }
 
 function nuevaDireccion() {
@@ -100,7 +114,7 @@ function nuevaDireccion() {
   $('#nuevosElementos .panel-body #close-A').attr('id', 'close-' + labels[cantDirecciones]).removeClass('hidden');
   $('#nuevosElementos .panel-body #close-' + labels[cantDirecciones]).attr("onclick", "eliminarDireccion('" + labels[cantDirecciones] + "')");
   // cambia los parametros onkeypress
-  $('#nuevosElementos .panel-body #ubicacion-' + labels[cantDirecciones]).attr({"onkeypress": "buscarUbicacion(event, '"+ labels[cantDirecciones] +"')", "onclick": "verificarError('"+ labels[cantDirecciones] +"')"});
+  $('#nuevosElementos .panel-body #ubicacion-' + labels[cantDirecciones]).attr("onclick", "verificarError('"+ labels[cantDirecciones] +"')");
   $('#nuevosElementos .panel-body #referencias-' + labels[cantDirecciones]).attr("onclick", "verificarError('"+ labels[cantDirecciones] +"')");
   $('#nuevosElementos .panel-body #instrucciones-' + labels[cantDirecciones]).attr("onclick", "verificarError('"+ labels[cantDirecciones] +"')");
   $('#nuevosElementos .panel-body #boton-gps-' + labels[cantDirecciones]).attr("onclick", "myGeolocation('"+ labels[cantDirecciones] +"')");
@@ -110,8 +124,9 @@ function nuevaDireccion() {
 }
 
 function adicionarMarcador(latLon, label) {
+  console.log("ENTRE ADICIONAR MARCADOR");
 	var marker;
-	var infowindow = new google.maps.InfoWindow();
+  infowindow.close();
 	if (null == existeMarcador(label)) {
       marker = new google.maps.Marker({
       position: latLon,
@@ -132,8 +147,7 @@ function adicionarMarcador(latLon, label) {
 		marker = existeMarcador(label);
 		marker.setPosition(latLon);
 	}
-
-	if (marcadores.length == 1) {
+  if (marcadores.length == 1) {
     	var objConfig = {
 			zoom: 15,
 			center: latLon
@@ -257,36 +271,57 @@ function programarServicio() {
 }
 
 function confirmarServicio() {
-  var confirmar = true;
+  $('#_detalle_servicio_').addClass('hidden');
+  $('#btn-solicitar').remove();
+  var camposLlenos = true;
   var result = "";
+	for (var i = 0; i < cantDirecciones; i++) {
+		var u = __("ubicacion-" + labels[i]).value.trim();
+		var r = __("referencias-" + labels[i]).value.trim();
+		var ins = __("instrucciones-" + labels[i]).value.trim();
+		if (u == "" || r == "" || ins == "") {
+      camposLlenos = false;
+      marcarError(labels[i]);
+		}
+	}
+  if (!camposLlenos) {
+    result = '<div class="alert alert-dismissible alert-danger">'
+    result += '<button type="button" class="close" data-dismiss="alert">&times;</button>'
+    result += '<strong>ERROR: </strong>Todos los campos deben estar llenos.'
+    result += '</div>'
+    __('_error_campos_').innerHTML = result;
+	} else {
+    __('_error_campos_').innerHTML = "";
+  }
   if (cantDirecciones != marcadores.length) {
     result = '<div class="alert alert-dismissible alert-danger">'
     result += '<button type="button" class="close" data-dismiss="alert">&times;</button>'
     result += '<strong>ERROR: </strong>Es importante que esten los marcadores en el mapa.'
     result += '</div>'
     __('_error_marcadores_').innerHTML = result;
+  } else {
+    __('_error_marcadores_').innerHTML = "";
   }
-	for (var i = 0; i < cantDirecciones; i++) {
-		var u = document.getElementById("ubicacion-" + labels[i]).value.trim();
-		var r = document.getElementById("referencias-" + labels[i]).value.trim();
-		var ins = document.getElementById("instrucciones-" + labels[i]).value.trim();
-		if (u == "" || r == "" || ins == "") {
-      confirmar = false;
-      marcarError(labels[i]);
-		}
-	}
-	if (confirmar) {
-      __('_error_campos_').innerHTML = "";
-      __('_error_marcadores_').innerHTML = "";
-      __('_titulo_confirmar_').innerHTML = "Confirmar Servicio";
-	} else {
-    result = '<div class="alert alert-dismissible alert-danger">'
-    result += '<button type="button" class="close" data-dismiss="alert">&times;</button>'
-    result += '<strong>ERROR: </strong>Todos los campos deben estar llenos.'
-    result += '</div>'
-    __('_error_campos_').innerHTML = result;
+  if (servicioProgramado) {
+    var f = __('fecha-servicio').value.trim();
+    var h = __('hora-servicio').value.trim();
+    if (f == "" || h == "") {
+      result = '<div class="alert alert-dismissible alert-danger">'
+      result += '<button type="button" class="close" data-dismiss="alert">&times;</button>'
+      result += '<strong>ERROR: </strong>Rellena la fecha y hora que deseas programar el servicio.'
+      result += '</div>'
+      __('_error_programar_servicio_').innerHTML = result;
+    }
+  } else {
+    __('_error_programar_servicio_').innerHTML = "";
+  }
+  if (camposLlenos && (marcadores.length == cantDirecciones)) {
+    __('_titulo_confirmar_').innerHTML = "Confirmar Servicio";
+    mostrarDetalles();
+  } else {
     __('_titulo_confirmar_').innerHTML = "Verifica algunos detalles";
   }
+
 }
 
 function marcarError(label) {

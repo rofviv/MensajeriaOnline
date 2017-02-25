@@ -16,6 +16,8 @@
     .affix-top {padding-top:0px; padding-bottom:0px;}
     body {padding-top: 50px;}
   </style>
+  <link rel="stylesheet" href="includes/libs/datepicker/css/bootstrap-datepicker3.min.css">
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
   <?php endif; ?>
 
   <script type="text/javascript" src="includes/js/generales.js"></script>

@@ -89,6 +89,5 @@
   </section>
 
   <?php include(TEMPLATE_DIR . 'complement/footer.php'); ?>
-
 </body>
 </html>
